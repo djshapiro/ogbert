@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "A platform for optimizing bitcoin trading strategies",
-  "main": "index.js",
+  "main": "start.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exiti 1",
     "start": "node --use_strict start.js"
