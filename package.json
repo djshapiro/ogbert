@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/djshapiro/ogbert/issues"
   },
-  "homepage": "https://github.com/djshapiro/ogbert#readme"
+  "homepage": "https://github.com/djshapiro/ogbert#readme",
+  "dependencies": {
+    "request": "^2.81.0"
+  }
 }

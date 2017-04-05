@@ -1,9 +1,13 @@
 const http         = require('http'),
+      https        = require('https'),
       fs           = require('fs'),
       path         = require('path'),
       contentTypes = require('./utils/content-types'),
       sysInfo      = require('./utils/sys-info'),
+      request      = require('request'),
       env          = process.env;
+
+http.debug = 2;
 
 let server = http.createServer(function (req, res) {
   let url = req.url;
@@ -21,6 +25,10 @@ let server = http.createServer(function (req, res) {
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Cache-Control', 'no-cache, no-store');
     res.end(JSON.stringify(sysInfo[url.slice(6)]()));
+  } else if (url == '/btc') {
+    request('https://api.bitfinex.com/v1/pubticker/btcusd', (err, result, body) => {
+      res.end(body);
+    });
   } else {
     fs.readFile('./static' + url, function (err, data) {
       if (err) {
@@ -41,5 +49,5 @@ let server = http.createServer(function (req, res) {
 });
 
 server.listen(env.NODE_PORT || 3000, env.NODE_IP || 'localhost', function () {
-  console.log(`Application worker ${process.pid} started...`);
+  console.log(`Application worker ${process.pid} started on port ${env.NODE_PORT || 3000}`);
 });
