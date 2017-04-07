@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "description": "A platform for optimizing bitcoin trading strategies",
-  "main": "start.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exiti 1",
-    "start": "node --use_strict start.js"
+    "start": "node --use_strict app.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/djshapiro/ogbert#readme",
   "dependencies": {
+    "body-parser": "^1.17.1",
+    "mongodb": "^2.2.25",
     "request": "^2.81.0"
   }
 }

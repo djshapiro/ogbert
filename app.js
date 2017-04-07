@@ -5,9 +5,29 @@ const http         = require('http'),
       contentTypes = require('./utils/content-types'),
       sysInfo      = require('./utils/sys-info'),
       request      = require('request'),
+      mongo        = require('mongodb'),
+      bodyParser   = require('body-parser'),
       env          = process.env;
 
-http.debug = 2;
+const db_url = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost:27017';
+mongo.MongoClient.connect(db_url, (err, connection) => {
+    const priceCollection = connection.db('prices').collection('btc');
+    //Create function for getting BTC data
+    const getBTCData = () => {
+        request('https://api.bitfinex.com/v1/pubticker/btcusd', (err, result, body) => {
+            priceCollection.insertOne(JSON.parse(body), function(err, result) {
+                console.log('error: ', err);
+                console.log('result: ', result);
+            });
+        });
+        setTimeout(getBTCData, 5000);
+    }
+
+    //Get BTC data
+    getBTCData();
+});
+
+
 
 let server = http.createServer(function (req, res) {
   let url = req.url;
