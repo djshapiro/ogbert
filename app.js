@@ -47,7 +47,7 @@ mongo.MongoClient.connect(db_url, (err, connection) => {
         res.writeHead(200);
         res.end();
       } else if (url == '/btc') {
-        priceCollection.find().toArray((err, result) => {
+        priceCollection.find().sort({"_id": -1}).toArray((err, result) => {
           return res.end(JSON.stringify({result: result}));
         });
       } else {
