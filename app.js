@@ -9,16 +9,22 @@ const http         = require('http'),
       bodyParser   = require('body-parser'),
       env          = process.env;
 
+const period = 5000;
+
 const db_url = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost:27017';
 mongo.MongoClient.connect(db_url, (err, connection) => {
     const priceCollection = connection.db('prices').collection('btc');
     //Create function for getting BTC data
     const getBTCData = () => {
-        request('https://api.bitfinex.com/v1/pubticker/btcusd', (err, result, body) => {
-            priceCollection.insertOne(JSON.parse(body), function(err, result) {
-            });
-        });
-        setTimeout(getBTCData, 5000);
+        try {
+          request('https://api.bitfinex.com/v1/pubticker/btcusd', (err, result, body) => {
+              priceCollection.insertOne(JSON.parse(body), function(err, result) {
+              });
+          });
+          setTimeout(getBTCData, period);
+        } catch (e) {
+          setTimeout(getBTCData, period);
+        }
     }
 
     //Get BTC data
