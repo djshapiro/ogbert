@@ -9,7 +9,7 @@ const http         = require('http'),
       bodyParser   = require('body-parser'),
       env          = process.env;
 
-const period = 5000;
+const period = 30000;
 
 const db_url = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost:27017';
 mongo.MongoClient.connect(db_url, (err, connection) => {
@@ -18,7 +18,11 @@ mongo.MongoClient.connect(db_url, (err, connection) => {
     const getBTCData = () => {
         try {
           request('https://api.bitfinex.com/v1/pubticker/btcusd', (err, result, body) => {
-              priceCollection.insertOne(JSON.parse(body), function(err, result) {
+              //We don't care about low and high data
+              let newbody = JSON.parse(body);
+              delete newbody.low;
+              delete newbody.high;
+              priceCollection.insertOne(newbody, function(err, result) {
               });
           });
           setTimeout(getBTCData, period);
