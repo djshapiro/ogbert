@@ -14,7 +14,7 @@ const period = 30000;
 const db_url = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost:27017';
 mongo.MongoClient.connect(db_url, (err, connection) => {
     const priceCollection = connection.db('prices').collection('btc');
-    //Create function for getting BTC data
+    //Create function for getting external BTC data
     const getBTCData = () => {
         try {
           request('https://api.bitfinex.com/v1/pubticker/btcusd', (err, result, body) => {
@@ -31,7 +31,7 @@ mongo.MongoClient.connect(db_url, (err, connection) => {
         }
     }
 
-    //Get BTC data
+    //Start getting external BTC data
     getBTCData();
 
     let server = http.createServer(function (req, res) {
@@ -47,8 +47,12 @@ mongo.MongoClient.connect(db_url, (err, connection) => {
         res.writeHead(200);
         res.end();
       } else if (url == '/btc') {
-        priceCollection.find().sort({"_id": -1}).toArray((err, result) => {
-          return res.end(JSON.stringify({result: result}));
+        priceCollection.find().limit(100).sort({"_id": -1}).toArray((err, result) => {
+          const results = result.map((ticker) => {
+              ticker.timestamp = new Date(ticker.timestamp*1000);
+              return ticker;
+          });
+          return res.end(JSON.stringify({result: results}));
         });
       } else {
         fs.readFile('./static' + url, function (err, data) {
