@@ -5,7 +5,7 @@
   "description": "A platform for optimizing bitcoin trading strategies",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exiti 1",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --use_strict app.js"
   },
   "repository": {
@@ -21,6 +21,6 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "mongodb": "^2.2.25",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
   }
 }
